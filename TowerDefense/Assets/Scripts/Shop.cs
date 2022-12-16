@@ -10,9 +10,9 @@ public class Shop : MonoBehaviour
     public GameObject shopUI;
     public TextMeshProUGUI healthPotionsText;
     public PlayerStats playerStat;
-    private int healthCost = 20;
-    private int speedCost = 40;
-    private int damageCost = 50;
+    private int healthCost = 50;
+    private int speedCost = 100;
+    private int damageCost = 150;
     private int increaseHealth = 50;
     void Start()
     {   
@@ -23,8 +23,7 @@ public class Shop : MonoBehaviour
     
     private void Update()
     {
-        healthPotionsText.text = "x" + healthPotions.ToString();
-        if(Input.GetKey("a") && healthPotions > 0){
+        if(Input.GetKey("a") && (healthPotions > 0)){
             usingHealthPotion();
         }
     }
@@ -65,7 +64,7 @@ public class Shop : MonoBehaviour
         if (PlayerStats.coins >= healthCost){
             PlayerStats.coins -= healthCost;
             healthPotions += 1;
-           
+            healthPotionsText.text = "x" + healthPotions.ToString();
         }
     }
 
@@ -73,6 +72,8 @@ public class Shop : MonoBehaviour
         if((playerStat.health+increaseHealth) <= playerStat.maxHealth){
             playerStat.health += increaseHealth;
             healthPotions -= 1;
+            healthPotionsText.text = "x" + healthPotions.ToString();
         }
+        Debug.Log("player health: " + playerStat.health);
     }
 }

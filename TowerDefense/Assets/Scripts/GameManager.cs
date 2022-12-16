@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         UpdateEnemyCount();
         enemiesLeftText.text = "ENEMIES: " + enemyCount;
-        coins.text = "COINS: " + PlayerStats.coins;
+        coins.text = PlayerStats.coins.ToString();
     }
     private void UpdateEnemyCount()
     {

@@ -13,14 +13,15 @@ public class SpawnManager : MonoBehaviour
     public float timeBetweenRounds = 5.0f;
     public float currentTime = 0;
     public float countdownTime = 5.0f;
-    private int[] enemiesToSpawn = {5,8,13,20,25,30,37,38,39,50};
-
+    private int[] enemiesToSpawn = {5,8,13,20,23,27,35,37,44,50};
+    private int spawnEnemies = 0;
     public TextMeshProUGUI currentRoundText;
     public TextMeshProUGUI countdownText;
 
     private void Start()
     {
-        spawnEnemyWave(level);
+        // spawnEnemyWave(level);
+        StartCoroutine("SpawnEnemies");
     }
     private void Update()
     {
@@ -37,7 +38,8 @@ public class SpawnManager : MonoBehaviour
             {
                 currentTime = 0;
                 level++;
-                spawnEnemyWave(level);
+                spawnEnemies = 0;
+                StartCoroutine("SpawnEnemies");
             }
             
         }
@@ -56,12 +58,15 @@ public class SpawnManager : MonoBehaviour
         currentRoundText.text = "ROUND: " + level;
     }
 
-    private void spawnEnemyWave(int level) {
-
-        for (int i = 0; i < enemiesToSpawn[level-1]; i++ ){
-            // Enemy spawns at randomly spawn locations
-            Instantiate(enemyPrefab, spawnLocations[Random.Range(0,spawnLocations.Length)].transform.position, enemyPrefab.transform.rotation);
-            
+    IEnumerator SpawnEnemies(){
+        Debug.Log("start spawning");
+        while(spawnEnemies < enemiesToSpawn[level-1])
+        {
+            Vector3 spawnLocation = spawnLocations[Random.Range(0,spawnLocations.Length)].transform.position;
+            Instantiate(enemyPrefab,spawnLocation , enemyPrefab.transform.rotation);
+            spawnEnemies += 1;
+            Debug.Log("enemy spawn " + spawnEnemies);
+            yield return new WaitForSeconds(3.0f);
         }
     }
 

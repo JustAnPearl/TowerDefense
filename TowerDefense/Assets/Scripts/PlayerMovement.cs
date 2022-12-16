@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         player = GetComponent<PlayerStats>();
         player.health = player.maxHealth;
-        player.speed = myAgent.speed;
     }
 
     // Update is called once per frame

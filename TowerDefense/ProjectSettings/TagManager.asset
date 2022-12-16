@@ -8,6 +8,7 @@ TagManager:
   - Tower
   - Sword
   - Shop
+  - node
   layers:
   - Default
   - TransparentFX
