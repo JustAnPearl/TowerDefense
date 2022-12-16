@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
         }
 
         // Enemy reached target
-        if (enemy.isStopped == true){
+        if (enemy.isStopped == true && tower != null){
             if(cooldown <= 0){
                 cooldown = stats.attackRate;
                 if (attackTower == true)
@@ -72,7 +72,8 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Tower")){
+        if(other.CompareTag("Tower") && tower != null)
+        {
             enemy.isStopped = true;
             transform.LookAt(tower.transform);
             attackTower = true;

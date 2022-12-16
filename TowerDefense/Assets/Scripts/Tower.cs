@@ -5,22 +5,33 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     public GameManager gameManager;
+    public GameObject tower;
+    public GameObject gameOverObject;
+
+
     // public GameObject tower;
-    public float towerMaxHealth = 2000.0f;
+    public float towerMaxHealth = 20.0f;
     public float towerHealth;
     // Start is called before the first frame update
     void Start()
     {
+        tower = GameObject.Find("Tower");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         towerHealth = towerMaxHealth;
     }
 
     void Update(){
-        if (towerHealth <= 0)
+        if (towerHealth <= 0 && tower != null)
 		{
-			Destroy(GameObject.Find("Tower"));
+            //Time.timeScale = 0;
+            Destroy(GameObject.Find("Tower"));
             Debug.Log("Game over");
-            //gameManager.GameOver();
+
+            Time.timeScale = 0;
+            gameOverObject.gameObject.SetActive(true);
+
+            //StartCoroutine(gameManager.GameOver());
+            //tower.gameObject.SetActive(false);
         }
     }
 
