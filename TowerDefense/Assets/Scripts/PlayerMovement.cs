@@ -16,14 +16,18 @@ public class PlayerMovement : MonoBehaviour
     RaycastHit hitInfo;
     public PlayerStats player;
     public GameManager gameManager;
+    private float attackRate = 1.0f;
+    private float attackCooldown;
+
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
-        player = GetComponent<PlayerStats>();
         player.health = player.maxHealth;
+        attackCooldown = 0;
     }
 
     // Update is called once per frame
@@ -37,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(myRay, out hitInfo, 100, whatCanBeClickedOn))
             {
                 myAgent.isStopped = false;
-                Debug.Log(hitInfo.point);
                 myAgent.SetDestination(hitInfo.point);
             }
         }
@@ -51,11 +54,14 @@ public class PlayerMovement : MonoBehaviour
                 // Check if click on enemy
                 if (hitInfo.transform != null){
                     if (hitInfo.transform.gameObject.tag == "Enemy" ){
-                        if (myAgent.isStopped){
-                            myAgent.isStopped = false;
+                        if(attackCooldown <= 0){
+                            if (myAgent.isStopped){
+                                myAgent.isStopped = false;
+                            }
+                            targetedEnemy = true;
+                            leftClick = true;
+                            attackCooldown = attackRate;
                         }
-                        targetedEnemy = true;
-                        leftClick = true;
                     }
                     if( hitInfo.transform.gameObject.tag == "Shop"){
                         targetedShop = true;
@@ -65,6 +71,10 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+        if (attackCooldown >=0){
+            attackCooldown -= Time.deltaTime;
+        }
+
 
         // Follow the targeted enemy or go to the shop
         if (targetedEnemy == true){

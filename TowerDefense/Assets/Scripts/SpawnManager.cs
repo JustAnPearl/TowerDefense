@@ -65,7 +65,6 @@ public class SpawnManager : MonoBehaviour
             Vector3 spawnLocation = spawnLocations[Random.Range(0,spawnLocations.Length)].transform.position;
             Instantiate(enemyPrefab,spawnLocation , enemyPrefab.transform.rotation);
             spawnEnemies += 1;
-            Debug.Log("enemy spawn " + spawnEnemies);
             yield return new WaitForSeconds(3.0f);
         }
     }

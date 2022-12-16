@@ -9,13 +9,15 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI enemiesLeftText;
     public TextMeshProUGUI coins;
     public int enemyCount;
+    public PlayerStats playerStats;
+
 
     private void Update()
     {
         Time.timeScale = 1;
         UpdateEnemyCount();
         enemiesLeftText.text = "ENEMIES: " + enemyCount;
-        coins.text = PlayerStats.coins.ToString();
+        coins.text = playerStats.coins.ToString();
     }
     private void UpdateEnemyCount()
     {

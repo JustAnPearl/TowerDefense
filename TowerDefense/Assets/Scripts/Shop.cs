@@ -9,7 +9,7 @@ public class Shop : MonoBehaviour
     public NavMeshAgent player;
     public GameObject shopUI;
     public TextMeshProUGUI healthPotionsText;
-    public PlayerStats playerStat;
+    public PlayerStats playerStats;
     private int healthCost = 50;
     private int speedCost = 100;
     private int damageCost = 150;
@@ -17,8 +17,6 @@ public class Shop : MonoBehaviour
     void Start()
     {   
         player = GetComponent<NavMeshAgent>();
-        playerStat = GetComponent<PlayerStats>();
-
     }
     
     private void Update()
@@ -47,33 +45,33 @@ public class Shop : MonoBehaviour
     }
     
     public void PurchaseIncreaseDamage(){
-        if (PlayerStats.coins > damageCost){
-            PlayerStats.coins -= damageCost;
+        if (playerStats.coins > damageCost){
+            playerStats.coins -= damageCost;
             Debug.Log("Damage increased!");
         }
     }
 
     public void PurchaseIncreaseSpeed(){
-        if (PlayerStats.coins > speedCost){
-            PlayerStats.coins -= speedCost;
+        if (playerStats.coins > speedCost){
+            playerStats.coins -= speedCost;
             Debug.Log("Speed increased!");
         }
     }
 
     public void PurchaseHealthPotion(){
-        if (PlayerStats.coins >= healthCost){
-            PlayerStats.coins -= healthCost;
+        if (playerStats.coins >= healthCost){
+            playerStats.coins -= healthCost;
             healthPotions += 1;
             healthPotionsText.text = "x" + healthPotions.ToString();
         }
     }
 
     public void usingHealthPotion(){
-        if((playerStat.health+increaseHealth) <= playerStat.maxHealth){
-            playerStat.health += increaseHealth;
+        if((playerStats.health+increaseHealth) <= playerStats.maxHealth){
+            playerStats.health += increaseHealth;
             healthPotions -= 1;
             healthPotionsText.text = "x" + healthPotions.ToString();
         }
-        Debug.Log("player health: " + playerStat.health);
+        Debug.Log("player health: " + playerStats.health);
     }
 }

@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public GameObject player;
     public GameManager gameManager;
     public TextMeshProUGUI coins;
+    public PlayerStats playerStats;
 	public float startHealth = 60.0f;
 	public float health;
     private float attackRate = 4.0f;
@@ -98,8 +99,8 @@ public class Enemy : MonoBehaviour
 
 		if (health <= 0)
 		{   
-            PlayerStats.coins += enemyWorth;
-            Debug.Log(PlayerStats.coins);
+            playerStats.coins += enemyWorth;
+            Debug.Log(playerStats.coins);
 			Destroy(gameObject);
 		}
 	}
