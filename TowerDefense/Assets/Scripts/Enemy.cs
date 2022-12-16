@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public TextMeshProUGUI coins;
 	public float startHealth = 60.0f;
 	public float health;
-    private float attackRate = 5.0f;
+    private float attackRate = 4.0f;
     private float cooldown;
 
     public float enemyDamage = 10.0f;
@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     public int enemyWorth = 10;
     public bool attackTower = false;
     public bool attackPlayer = false;
+    public float spawnRange = 1.0f;
 
 
     // Start is called before the first frame update
@@ -32,13 +33,14 @@ public class Enemy : MonoBehaviour
         enemy = GetComponent<NavMeshAgent>();
 		health = startHealth;
         cooldown = attackRate;
+        // Move to the tower
+        Vector3 destination =  new Vector3 (tower.transform.position.x, enemy.transform.position.y, tower.transform.position.z);
+        enemy.SetDestination(destination);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move to the tower
-        enemy.SetDestination(tower.transform.position);
         // Debug.Log("Destination: " + enemy.pathEndPosition);
         
         // got attacked, then follow player
@@ -60,6 +62,12 @@ public class Enemy : MonoBehaviour
             else
                 cooldown -= Time.deltaTime;
         }
+    }
+    private Vector3 GenerateDestinationPos() { 
+        float spawnPosX = Random.Range(-spawnRange, spawnRange);
+        float spawnPosZ = Random.Range(-spawnRange, spawnRange);
+        Vector3 randomDes = new Vector3 (tower.transform.position.x + spawnPosX, 0, tower.transform.position.z + spawnPosZ);
+        return randomDes;
     }
 
     private void OnTriggerEnter(Collider other) {
