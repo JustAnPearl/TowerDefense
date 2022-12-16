@@ -8,18 +8,14 @@ public class GameManager : MonoBehaviour
     // public TextMeshProUGUI gameoverText;
 
     public TextMeshProUGUI enemiesLeftText;
+    public TextMeshProUGUI coins;
     public int enemyCount;
-
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
         UpdateEnemyCount();
         enemiesLeftText.text = "ENEMIES: " + enemyCount;
+        coins.text = "COINS: " + PlayerStats.coins;
     }
     private void UpdateEnemyCount()
     {
@@ -27,7 +23,6 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameOver() {
-        // gameoverText.gameObject.SetActive(true);
         Debug.Log("Game over");
     }
 

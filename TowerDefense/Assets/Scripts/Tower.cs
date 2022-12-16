@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     // public GameObject tower;
-    public float towerMaxHealth = 500.0f;
+    public float towerMaxHealth = 2000.0f;
     public float towerHealth;
     // Start is called before the first frame update
     void Start()

@@ -9,10 +9,11 @@ public class SpawnManager : MonoBehaviour
     public Transform[] spawnLocations;
     public int enemyCount;
     public int level = 1;
-    public int maxLevel = 15;
+    public int maxLevel = 10;
     public float timeBetweenRounds = 5.0f;
     public float currentTime = 0;
     public float countdownTime = 5.0f;
+    private int[] enemiesToSpawn = {5,8,13,20,25,30,37,38,39,50};
 
     public TextMeshProUGUI currentRoundText;
     public TextMeshProUGUI countdownText;
@@ -55,8 +56,9 @@ public class SpawnManager : MonoBehaviour
         currentRoundText.text = "ROUND: " + level;
     }
 
-    private void spawnEnemyWave(int enemiesToSpawn) {
-        for (int i = 0; i < enemiesToSpawn; i++ ){
+    private void spawnEnemyWave(int level) {
+
+        for (int i = 0; i < enemiesToSpawn[level-1]; i++ ){
             // Enemy spawns at randomly spawn locations
             Instantiate(enemyPrefab, spawnLocations[Random.Range(0,spawnLocations.Length)].transform.position, enemyPrefab.transform.rotation);
             

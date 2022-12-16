@@ -11,18 +11,19 @@ public class PlayerMovement : MonoBehaviour
     public Animator playerAnimator;
     public bool isRunning;
     public bool targetedEnemy = false;
+    public bool targetedShop = false;
     public bool leftClick = true;
     RaycastHit hitInfo;
     public PlayerStats player;
-  
+    public GameObject gameOver;
     // Start is called before the first frame update
     void Start()
     {
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
-        myAgent.speed = 20.0f;
         player = GetComponent<PlayerStats>();
         player.health = player.maxHealth;
+        player.speed = myAgent.speed;
     }
 
     // Update is called once per frame
@@ -36,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(myRay, out hitInfo, 100, whatCanBeClickedOn))
             {
                 myAgent.isStopped = false;
+                Debug.Log(hitInfo.point);
                 myAgent.SetDestination(hitInfo.point);
             }
         }
@@ -48,16 +50,24 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Check if click on enemy
                 if (hitInfo.transform != null){
-                    if (hitInfo.transform.gameObject.tag == "Enemy"){
+                    if (hitInfo.transform.gameObject.tag == "Enemy" ){
+                        if (myAgent.isStopped){
+                            myAgent.isStopped = false;
+                        }
                         targetedEnemy = true;
                         leftClick = true;
+                    }
+                    if( hitInfo.transform.gameObject.tag == "Shop"){
+                        targetedShop = true;
+                        myAgent.isStopped = false;
+                        myAgent.SetDestination(hitInfo.transform.position);
                     }
                 }
             }
         }
 
-        // Follow the targeted enemy 
-        if (targetedEnemy == true ){
+        // Follow the targeted enemy or go to the shop
+        if (targetedEnemy == true){
             myAgent.isStopped = false;
             myAgent.SetDestination(hitInfo.transform.position);
         }
@@ -69,10 +79,12 @@ public class PlayerMovement : MonoBehaviour
         if (myAgent.remainingDistance <= myAgent.stoppingDistance || myAgent.isStopped == true)
         {
             isRunning = false;
+            myAgent.angularSpeed = 0;
         }
         else
         {
             isRunning = true;
+            myAgent.angularSpeed = 600;
         }
         playerAnimator.SetBool("isRunning", isRunning);
     }
@@ -83,6 +95,10 @@ public class PlayerMovement : MonoBehaviour
             Damage(other.gameObject.transform);
             Attack();
         } 
+        if (other.CompareTag( "Shop")){
+            Debug.Log("reach shop");
+            myAgent.isStopped = true;
+        }
     }
 
     void  OnTriggerStay(Collider other)

@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
+using TMPro;
 
 public class Enemy : MonoBehaviour
 {
-    public UnityEngine.AI.NavMeshAgent enemy;
+    public NavMeshAgent enemy;
     public GameObject tower;
     public GameObject player;
     public GameManager gameManager;
-
+    public TextMeshProUGUI coins;
 	public float startHealth = 60.0f;
 	public float health;
-    private bool nextAttack = true;
+    private float attackRate = 5.0f;
+    private float cooldown;
 
-    public float enemyDamage = 20.0f;
+    public float enemyDamage = 10.0f;
     public bool enemyAttacked = false;
+    public int enemyWorth = 10;
     public bool attackTower = false;
     public bool attackPlayer = false;
 
@@ -29,7 +31,7 @@ public class Enemy : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         enemy = GetComponent<NavMeshAgent>();
 		health = startHealth;
-        enemyDamage = 20.0f;
+        cooldown = attackRate;
     }
 
     // Update is called once per frame
@@ -37,6 +39,7 @@ public class Enemy : MonoBehaviour
     {
         // Move to the tower
         enemy.SetDestination(tower.transform.position);
+        // Debug.Log("Destination: " + enemy.pathEndPosition);
         
         // got attacked, then follow player
         if (enemyAttacked == true){
@@ -46,15 +49,17 @@ public class Enemy : MonoBehaviour
         }
 
         // Enemy reached target
-        if (enemy.isStopped == true && nextAttack == true){
-            if (attackTower == true)
-                DamageTower(tower.transform);
-            if(attackPlayer == true)
-                DamagePlayer(player.transform);
-            nextAttack = false;
-            StartCoroutine(delayAttacks());
+        if (enemy.isStopped == true){
+            if(cooldown <= 0){
+                cooldown = attackRate;
+                if (attackTower == true)
+                    DamageTower(tower.transform);
+                if(attackPlayer == true)
+                    DamagePlayer(player.transform);
+            }
+            else
+                cooldown -= Time.deltaTime;
         }
-
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -63,7 +68,7 @@ public class Enemy : MonoBehaviour
             transform.LookAt(tower.transform);
             attackTower = true;
         }
-        else if(other.CompareTag("Player")){
+        else if(other.CompareTag("Sword")){
             transform.LookAt(player.transform);
             enemy.isStopped = true;
             attackPlayer = true;
@@ -72,7 +77,7 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnTriggerExit(Collider other){
-        if(other.CompareTag("Player")){
+        if(other.CompareTag("Sword")){
             enemyAttacked = true;
         }
     }
@@ -82,10 +87,11 @@ public class Enemy : MonoBehaviour
 		health -= amount;
         Debug.Log("Enemy health -"+ amount + ", remain " + health);
 
-		// healthBar.fillAmount = health / startHealth;
 
 		if (health <= 0)
-		{
+		{   
+            PlayerStats.coins += enemyWorth;
+            Debug.Log(PlayerStats.coins);
 			Destroy(gameObject);
 		}
 	}
@@ -103,21 +109,13 @@ public class Enemy : MonoBehaviour
     }
 
     void DamagePlayer(Transform target){
-        Debug.Log("Attacking player");
         PlayerMovement p = target.GetComponent<PlayerMovement>();
         transform.LookAt(p.transform);
 
         if (p != null)
 		{
             p.TakeDamage(enemyDamage);
-		}
-        
+		}   
     }
-
-    IEnumerator delayAttacks(){
-        yield return new WaitForSeconds(3);
-        nextAttack = true;
-    }
-
 }
 
