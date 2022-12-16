@@ -9,11 +9,15 @@ public class Shop : MonoBehaviour
     public NavMeshAgent player;
     public GameObject shopUI;
     public TextMeshProUGUI healthPotionsText;
+    public TextMeshProUGUI damageCount;
+    public TextMeshProUGUI speedCount;
     public PlayerStats playerStats;
     private int healthCost = 50;
     private int speedCost = 100;
     private int damageCost = 150;
     private int increaseHealth = 50;
+    private int increaseSpeed = 5;
+    private int increaseDamage = 5;
     void Start()
     {   
         player = GetComponent<NavMeshAgent>();
@@ -28,13 +32,17 @@ public class Shop : MonoBehaviour
     
     void OnTriggerEnter(Collider other){
         if(other.CompareTag("Player"))
+        {
             Debug.Log("Reached shop");
             shopUI.gameObject.SetActive(true);
+        }
+        
     }
     void OnTriggerStay(Collider other){
-        if(other.CompareTag("Player"))
+        if(other.CompareTag("Player")){
             Debug.Log("In shop");
             shopUI.gameObject.SetActive(true);
+        }
     }
 
     void OnTriggerExit(Collider other){
@@ -45,15 +53,19 @@ public class Shop : MonoBehaviour
     }
     
     public void PurchaseIncreaseDamage(){
-        if (playerStats.coins > damageCost){
+        if (playerStats.coins >= damageCost){
             playerStats.coins -= damageCost;
+            playerStats.damage += increaseDamage;
+            damageCount.text = playerStats.damage.ToString();
             Debug.Log("Damage increased!");
         }
     }
 
     public void PurchaseIncreaseSpeed(){
-        if (playerStats.coins > speedCost){
+        if (playerStats.coins >= speedCost){
             playerStats.coins -= speedCost;
+            playerStats.speed += increaseSpeed;
+            speedCount.text = playerStats.speed.ToString();
             Debug.Log("Speed increased!");
         }
     }

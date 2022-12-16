@@ -17,10 +17,14 @@ public class SpawnManager : MonoBehaviour
     private int spawnEnemies = 0;
     public TextMeshProUGUI currentRoundText;
     public TextMeshProUGUI countdownText;
+    public EnemyStats enemyStats;
 
     private void Start()
     {
         // spawnEnemyWave(level);
+        enemyStats.maxHealth = 60.0f;
+        enemyStats.damage = 10.0f;
+        enemyStats.speed = 10.0f;
         StartCoroutine("SpawnEnemies");
     }
     private void Update()
@@ -39,6 +43,9 @@ public class SpawnManager : MonoBehaviour
                 currentTime = 0;
                 level++;
                 spawnEnemies = 0;
+                enemyStats.maxHealth += 10.0f;
+                enemyStats.damage += 5.0f;
+                enemyStats.speed += 1.0f;
                 StartCoroutine("SpawnEnemies");
             }
             
@@ -67,6 +74,7 @@ public class SpawnManager : MonoBehaviour
             spawnEnemies += 1;
             yield return new WaitForSeconds(3.0f);
         }
+
     }
 
 }

@@ -140,11 +140,9 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   coins: {fileID: 0}
   playerStats: {fileID: 11400000, guid: b51f2f6837b9748c88139950a07a1a10, type: 2}
-  startHealth: 60
+  stats: {fileID: 11400000, guid: 75006fd0207b54866b87d173a508c448, type: 2}
   health: 0
-  enemyDamage: 20
   enemyAttacked: 0
-  enemyWorth: 10
   attackTower: 0
   attackPlayer: 0
   spawnRange: 2

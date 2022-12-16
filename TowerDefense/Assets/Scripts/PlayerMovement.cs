@@ -26,13 +26,18 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
+        player.maxHealth = 1000.0f;
         player.health = player.maxHealth;
+        player.speed = 20.0f;
+        player.coins = 0;
+        player.damage = 20.0f;
         attackCooldown = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        myAgent.speed = player.speed;
         // Moving to position
         if (Input.GetMouseButtonDown(1))
         {

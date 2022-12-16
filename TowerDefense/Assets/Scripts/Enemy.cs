@@ -12,14 +12,11 @@ public class Enemy : MonoBehaviour
     public GameManager gameManager;
     public TextMeshProUGUI coins;
     public PlayerStats playerStats;
-	public float startHealth = 60.0f;
+    public EnemyStats stats;
 	public float health;
-    private float attackRate = 4.0f;
-    private float cooldown;
 
-    public float enemyDamage = 10.0f;
+    private float cooldown;
     public bool enemyAttacked = false;
-    public int enemyWorth = 10;
     public bool attackTower = false;
     public bool attackPlayer = false;
     public float spawnRange = 1.0f;
@@ -32,8 +29,8 @@ public class Enemy : MonoBehaviour
         player = GameObject.Find("Player");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         enemy = GetComponent<NavMeshAgent>();
-		health = startHealth;
-        cooldown = attackRate;
+		health = stats.maxHealth;
+        cooldown = stats.attackRate;
         // Move to the tower
         Vector3 destination =  new Vector3 (tower.transform.position.x, enemy.transform.position.y, tower.transform.position.z);
         enemy.SetDestination(destination);
@@ -42,6 +39,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        enemy.speed = stats.speed;
         // Debug.Log("Destination: " + enemy.pathEndPosition);
         
         // got attacked, then follow player
@@ -54,7 +52,7 @@ public class Enemy : MonoBehaviour
         // Enemy reached target
         if (enemy.isStopped == true){
             if(cooldown <= 0){
-                cooldown = attackRate;
+                cooldown = stats.attackRate;
                 if (attackTower == true)
                     DamageTower(tower.transform);
                 if(attackPlayer == true)
@@ -99,7 +97,7 @@ public class Enemy : MonoBehaviour
 
 		if (health <= 0)
 		{   
-            playerStats.coins += enemyWorth;
+            playerStats.coins += stats.worth;
             Debug.Log(playerStats.coins);
 			Destroy(gameObject);
 		}
@@ -111,7 +109,7 @@ public class Enemy : MonoBehaviour
 
         if (t != null)
 		{
-			t.towerHealth -= enemyDamage;
+			t.towerHealth -= stats.damage;
             Debug.Log("towerHealth: " + t.towerHealth);
 		}
         
@@ -123,7 +121,7 @@ public class Enemy : MonoBehaviour
 
         if (p != null)
 		{
-            p.TakeDamage(enemyDamage);
+            p.TakeDamage(stats.damage);
 		}   
     }
 }
