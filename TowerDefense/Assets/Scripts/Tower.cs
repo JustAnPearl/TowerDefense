@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+    public GameManager gameManager;
     // public GameObject tower;
     public float towerMaxHealth = 2000.0f;
     public float towerHealth;
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         towerHealth = towerMaxHealth;
     }
 
@@ -18,7 +20,8 @@ public class Tower : MonoBehaviour
 		{
 			Destroy(GameObject.Find("Tower"));
             Debug.Log("Game over");
-		}
+            //gameManager.GameOver();
+        }
     }
 
 }

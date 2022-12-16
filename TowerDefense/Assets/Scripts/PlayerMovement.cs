@@ -15,10 +15,11 @@ public class PlayerMovement : MonoBehaviour
     public bool leftClick = true;
     RaycastHit hitInfo;
     public PlayerStats player;
-    public GameObject gameOver;
+    public GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
         player = GetComponent<PlayerStats>();
@@ -127,7 +128,8 @@ public class PlayerMovement : MonoBehaviour
 		if (player.health <= 0)
 		{
 			playerAnimator.SetTrigger("isDead");
-		}
+            StartCoroutine(gameManager.GameOver());
+        }
     }
 
     void Attack(){
