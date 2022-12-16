@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public TextMeshProUGUI coins;
     public PlayerStats playerStats;
     public EnemyStats stats;
+    public Animator enemyAnim;
 	public float health;
 
     private float cooldown;
@@ -29,6 +30,7 @@ public class Enemy : MonoBehaviour
         player = GameObject.Find("Player");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         enemy = GetComponent<NavMeshAgent>();
+        enemyAnim = GetComponent<Animator>();
 		health = stats.maxHealth;
         cooldown = stats.attackRate;
         // Move to the tower
@@ -109,6 +111,7 @@ public class Enemy : MonoBehaviour
 
         if (t != null)
 		{
+            enemyAnim.SetTrigger("isAttacking");
 			t.towerHealth -= stats.damage;
             Debug.Log("towerHealth: " + t.towerHealth);
 		}
@@ -121,6 +124,7 @@ public class Enemy : MonoBehaviour
 
         if (p != null)
 		{
+            enemyAnim.SetTrigger("isAttacking");
             p.TakeDamage(stats.damage);
 		}   
     }
