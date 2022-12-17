@@ -11,7 +11,7 @@ public class Tower : MonoBehaviour
 
 
     // public GameObject tower;
-    public float towerMaxHealth = 20.0f;
+    public float towerMaxHealth = 700.0f;
     public float towerHealth;
     public TextMeshProUGUI health;
     // Start is called before the first frame update

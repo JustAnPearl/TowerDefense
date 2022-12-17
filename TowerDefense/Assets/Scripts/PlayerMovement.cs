@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
-        player.maxHealth = 1000.0f;
+        player.maxHealth = 500.0f;
         player.health = player.maxHealth;
         player.speed = 20.0f;
         player.coins = 0;
