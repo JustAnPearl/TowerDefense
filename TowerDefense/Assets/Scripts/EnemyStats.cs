@@ -7,5 +7,5 @@ public class EnemyStats : ScriptableObject
     public float damage;
     public float speed;
     public float attackRate = 4.0f;
-    public int worth = 10;
+    public int worth = 20;
 }
