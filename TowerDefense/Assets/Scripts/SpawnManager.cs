@@ -14,10 +14,13 @@ public class SpawnManager : MonoBehaviour
     public float currentTime = 0;
     public float countdownTime = 5.0f;
     private int[] enemiesToSpawn = {5,8,13,20,23,27,35,37,44,50};
+
+    private int tmp = 1;
     private int spawnEnemies = 0;
     public TextMeshProUGUI currentRoundText;
     public TextMeshProUGUI countdownText;
     public EnemyStats enemyStats;
+    public GameObject congrats;
 
     private void Start()
     {
@@ -36,12 +39,16 @@ public class SpawnManager : MonoBehaviour
             currentTime += Time.deltaTime;
 
             countdownTime -= Time.deltaTime;
+            if(tmp == level){
+                level++;
+            }
 
             //when current time reaches time between rounds, start next round
             if (currentTime >= timeBetweenRounds)
             {
+                Debug.Log(level);
                 currentTime = 0;
-                level++;
+                tmp++;
                 spawnEnemies = 0;
                 enemyStats.maxHealth += 10.0f;
                 enemyStats.damage += 5.0f;
@@ -54,6 +61,10 @@ public class SpawnManager : MonoBehaviour
         {
             countdownText.text = "";
             countdownTime = 5.0f;
+        }
+        else if (level > maxLevel){
+            Time.timeScale = 0;
+            congrats.gameObject.SetActive(true);
         }
 
         if (enemyCount == 0 && level <= maxLevel)
@@ -74,7 +85,6 @@ public class SpawnManager : MonoBehaviour
             spawnEnemies += 1;
             yield return new WaitForSeconds(3.0f);
         }
-
     }
 
 }

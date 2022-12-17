@@ -19,7 +19,6 @@ public class Enemy : MonoBehaviour
     private float cooldown;
     public bool enemyAttacked = false;
     public bool attackTower = false;
-    public bool attackPlayer = false;
     public float spawnRange = 1.0f;
 
 
@@ -57,7 +56,7 @@ public class Enemy : MonoBehaviour
                 cooldown = stats.attackRate;
                 if (attackTower == true)
                     DamageTower(tower.transform);
-                if(attackPlayer == true)
+                if(enemyAttacked == true)
                     DamagePlayer(player.transform);
             }
             else
@@ -78,17 +77,9 @@ public class Enemy : MonoBehaviour
             transform.LookAt(tower.transform);
             attackTower = true;
         }
-        else if(other.CompareTag("Sword")){
+        else if(other.CompareTag("Sword") && enemyAttacked == true){
             transform.LookAt(player.transform);
             enemy.isStopped = true;
-            attackPlayer = true;
-            enemyAttacked = false;
-        }
-    }
-
-    private void OnTriggerExit(Collider other){
-        if(other.CompareTag("Sword")){
-            enemyAttacked = true;
         }
     }
 

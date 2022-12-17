@@ -13,8 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isRunning;
     public bool targetedEnemy = false;
     public bool targetedShop = false;
-    public bool leftClick = true;
-    RaycastHit hitInfo2;
+    public bool leftClick;
     RaycastHit hitInfo1;
     public PlayerStats player;
     public GameManager gameManager;
@@ -36,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
         player.coins = 0;
         player.damage = 20.0f;
         attackCooldown = 0;
+        leftClick = false;
     }
 
     // Update is called once per frame
@@ -59,11 +59,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(myRay, out hitInfo2))
+            if (Physics.Raycast(myRay, out hitInfo1))
             {
                 // Check if click on enemy
-                if (hitInfo2.transform != null){
-                    if (hitInfo2.transform.gameObject.tag == "Enemy" ){
+                if (hitInfo1.transform != null){
+                    if (hitInfo1.transform.gameObject.tag == "Enemy" ){
                         if(attackCooldown <= 0){
                             if (myAgent.isStopped){
                                 myAgent.isStopped = false;
@@ -73,10 +73,11 @@ public class PlayerMovement : MonoBehaviour
                             attackCooldown = attackRate;
                         }
                     }
-                    if( hitInfo2.transform.gameObject.tag == "Shop"){
+                    if( hitInfo1.transform.gameObject.tag == "Shop"){
                         targetedShop = true;
                         myAgent.isStopped = false;
-                        myAgent.SetDestination(hitInfo2.transform.position);
+                        leftClick = true;
+                        myAgent.SetDestination(hitInfo1.transform.position);
                     }
                 }
             }
@@ -89,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         // Follow the targeted enemy or go to the shop
         if (targetedEnemy == true){
             myAgent.isStopped = false;
-            myAgent.SetDestination(hitInfo2.transform.position);
+            myAgent.SetDestination(hitInfo1.transform.position);
         }
 
         movingAnimation();
@@ -111,22 +112,31 @@ public class PlayerMovement : MonoBehaviour
 
     // Reached enemy
     void OnTriggerEnter(Collider other) {
-        if (other.CompareTag( "Enemy") && leftClick == true && other.gameObject.transform.position == hitInfo2.transform.position) {
-            Damage(other.gameObject.transform);
-            Attack();
-        } 
-        if (other.CompareTag( "Shop")){
-            Debug.Log("reach shop");
-            myAgent.isStopped = true;
+        Debug.Log("Trigger enter " + leftClick);
+        if(leftClick == true)
+        {
+            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) {
+                Damage(other.gameObject.transform);
+                Attack();
+            } 
+            if (other.CompareTag( "Shop")){
+                Debug.Log("reach shop");
+                leftClick = false;
+                myAgent.isStopped = true;
+            }
         }
     }
 
     void  OnTriggerStay(Collider other)
     {
-        if (other.CompareTag( "Enemy") && leftClick == true) {
-            Damage(other.gameObject.transform);
-            Attack();
-        } 
+        Debug.Log("Trigger stay " + leftClick);
+        if(leftClick == true)
+        {
+            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) {
+                Damage(other.gameObject.transform);
+                Attack();
+            } 
+        }
     }
 
     void Damage (Transform enemy)
