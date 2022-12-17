@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Tower : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Tower : MonoBehaviour
     // public GameObject tower;
     public float towerMaxHealth = 20.0f;
     public float towerHealth;
+    public TextMeshProUGUI health;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,8 @@ public class Tower : MonoBehaviour
     }
 
     void Update(){
-        if (towerHealth <= 0 && tower != null)
+        health.text = towerHealth.ToString() + "/" + towerMaxHealth.ToString();
+        if (towerHealth <= 0)
 		{
             //Time.timeScale = 0;
             Destroy(GameObject.Find("Tower"));

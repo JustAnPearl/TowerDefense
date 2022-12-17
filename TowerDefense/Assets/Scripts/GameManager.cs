@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
         UpdateEnemyCount();
         enemiesLeftText.text = "ENEMIES: " + enemyCount;
         coins.text = playerStats.coins.ToString();
+        if(GameObject.Find("Tower") == null){
+            StartCoroutine(GameOver());
+        }
     }
     private void UpdateEnemyCount()
     {

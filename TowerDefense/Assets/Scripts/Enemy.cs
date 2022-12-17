@@ -116,7 +116,6 @@ public class Enemy : MonoBehaviour
 			t.towerHealth -= stats.damage;
             Debug.Log("towerHealth: " + t.towerHealth);
 		}
-        
     }
 
     void DamagePlayer(Transform target){

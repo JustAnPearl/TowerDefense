@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,11 +14,13 @@ public class PlayerMovement : MonoBehaviour
     public bool targetedEnemy = false;
     public bool targetedShop = false;
     public bool leftClick = true;
-    RaycastHit hitInfo;
+    RaycastHit hitInfo2;
+    RaycastHit hitInfo1;
     public PlayerStats player;
     public GameManager gameManager;
     private float attackRate = 1.0f;
     private float attackCooldown;
+    public TextMeshProUGUI health;
 
 
     // Start is called before the first frame update
@@ -27,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         myAgent = GetComponent<NavMeshAgent>();
         playerAnimator = GetComponent<Animator>();
-        player.maxHealth = 10.0f;
+        player.maxHealth = 1000.0f;
         player.health = player.maxHealth;
         player.speed = 20.0f;
         player.coins = 0;
@@ -38,16 +41,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        health.text = player.health.ToString() + "/" + player.maxHealth.ToString();
         myAgent.speed = player.speed;
         // Moving to position
         if (Input.GetMouseButtonDown(1))
         {
             Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(myRay, out hitInfo, 100, whatCanBeClickedOn))
+            if (Physics.Raycast(myRay, out hitInfo1, 100, whatCanBeClickedOn))
             {
                 myAgent.isStopped = false;
-                myAgent.SetDestination(hitInfo.point);
+                myAgent.SetDestination(hitInfo1.point);
             }
         }
 
@@ -55,11 +59,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(myRay, out hitInfo))
+            if (Physics.Raycast(myRay, out hitInfo2))
             {
                 // Check if click on enemy
-                if (hitInfo.transform != null){
-                    if (hitInfo.transform.gameObject.tag == "Enemy" ){
+                if (hitInfo2.transform != null){
+                    if (hitInfo2.transform.gameObject.tag == "Enemy" ){
                         if(attackCooldown <= 0){
                             if (myAgent.isStopped){
                                 myAgent.isStopped = false;
@@ -69,10 +73,10 @@ public class PlayerMovement : MonoBehaviour
                             attackCooldown = attackRate;
                         }
                     }
-                    if( hitInfo.transform.gameObject.tag == "Shop"){
+                    if( hitInfo2.transform.gameObject.tag == "Shop"){
                         targetedShop = true;
                         myAgent.isStopped = false;
-                        myAgent.SetDestination(hitInfo.transform.position);
+                        myAgent.SetDestination(hitInfo2.transform.position);
                     }
                 }
             }
@@ -85,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         // Follow the targeted enemy or go to the shop
         if (targetedEnemy == true){
             myAgent.isStopped = false;
-            myAgent.SetDestination(hitInfo.transform.position);
+            myAgent.SetDestination(hitInfo2.transform.position);
         }
 
         movingAnimation();
@@ -107,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Reached enemy
     void OnTriggerEnter(Collider other) {
-        if (other.CompareTag( "Enemy") && leftClick == true) {
+        if (other.CompareTag( "Enemy") && leftClick == true && other.gameObject.transform.position == hitInfo2.transform.position) {
             Damage(other.gameObject.transform);
             Attack();
         } 
