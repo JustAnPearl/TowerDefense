@@ -42,7 +42,6 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         enemy.speed = stats.speed;
-        // Debug.Log("Destination: " + enemy.pathEndPosition);
 
         // got attacked, then follow player
         if (enemyAttacked == true)
@@ -109,7 +108,6 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             playerStats.coins += stats.worth;
-            Debug.Log(playerStats.coins);
             Destroy(gameObject);
         }
     }
@@ -123,7 +121,6 @@ public class Enemy : MonoBehaviour
         {
             enemyAnim.SetTrigger("isAttacking");
             t.towerHealth -= stats.damage;
-            Debug.Log("towerHealth: " + t.towerHealth);
         }
     }
 

@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
     }
 
     public IEnumerator GameOver() {
-        Debug.Log("Game over");
         yield return new WaitForSeconds(2);
         Time.timeScale = 0;
         gameOverObject.gameObject.SetActive(true);

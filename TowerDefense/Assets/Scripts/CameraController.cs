@@ -3,7 +3,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     // How close cursor need to get the the edge of the screen so the camera will move
-    public float panBorderThickness = 10.0f; 
+    public float panBorderThickness; 
     public float panSpeed = 20.0f;
     public float panLimit = 200f;
     public float offset;
@@ -21,26 +21,31 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update(){
+    void Update()
+    {
         Vector3 pos = transform.position;
 
         // move camera up
-        if (Input.mousePosition.y >= Screen.height - panBorderThickness){
+        if (Input.mousePosition.y >= Screen.height - panBorderThickness)
+        {
             pos.z += panSpeed * Time.deltaTime;
         }
 
         // move camera down
-        if (Input.mousePosition.y <= panBorderThickness){
+        if (Input.mousePosition.y <= panBorderThickness)
+        {
             pos.z -= panSpeed * Time.deltaTime;
         }
 
         // move camera right
-        if (Input.mousePosition.x >= Screen.width - panBorderThickness){
+        if (Input.mousePosition.x >= Screen.width - panBorderThickness)
+        {
             pos.x += panSpeed * Time.deltaTime;
         }
 
         // move camera left
-        if (Input.mousePosition.x <= panBorderThickness){
+        if (Input.mousePosition.x <= panBorderThickness)
+        {
             pos.x -= panSpeed * Time.deltaTime;
         }
 
@@ -54,7 +59,8 @@ public class CameraController : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, -panLimit, panLimit);
 
         // go to player position
-        if (Input.GetKey("f")){
+        if (Input.GetKey("f"))
+        {
             pos.x = player.transform.position.x;
             pos.z = player.transform.position.z + offset;
             Debug.Log(player.transform.position);

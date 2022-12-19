@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float attackRate = 1.0f;
     private float attackCooldown;
     public TextMeshProUGUI health;
+    public GameObject particle;
 
 
     // Start is called before the first frame update
@@ -46,42 +48,14 @@ public class PlayerMovement : MonoBehaviour
         // Moving to position
         if (Input.GetMouseButtonDown(1))
         {
-            Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(myRay, out hitInfo1, 100, whatCanBeClickedOn))
-            {
-                myAgent.isStopped = false;
-                myAgent.SetDestination(hitInfo1.point);
-            }
+            GotRightClick();
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(myRay, out hitInfo1))
-            {
-                // Check if click on enemy
-                if (hitInfo1.transform != null){
-                    if (hitInfo1.transform.gameObject.tag == "Enemy" ){
-                        if(attackCooldown <= 0){
-                            if (myAgent.isStopped){
-                                myAgent.isStopped = false;
-                            }
-                            targetedEnemy = true;
-                            leftClick = true;
-                            attackCooldown = attackRate;
-                        }
-                    }
-                    if( hitInfo1.transform.gameObject.tag == "Shop"){
-                        targetedShop = true;
-                        myAgent.isStopped = false;
-                        leftClick = true;
-                        myAgent.SetDestination(hitInfo1.transform.position);
-                    }
-                }
-            }
+            GotLeftClick();
         }
+
         if (attackCooldown >=0){
             attackCooldown -= Time.deltaTime;
         }
@@ -96,7 +70,52 @@ public class PlayerMovement : MonoBehaviour
         movingAnimation();
     }
 
-    void movingAnimation(){
+    private void GotLeftClick()
+    {
+        Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(myRay, out hitInfo1))
+            {
+                // Check if click on enemy
+                if (hitInfo1.transform != null)
+                {
+                    if (hitInfo1.transform.gameObject.tag == "Enemy" )
+                    {
+                        if(attackCooldown <= 0)
+                        {
+                            if (myAgent.isStopped)
+                                myAgent.isStopped = false;
+                
+                            targetedEnemy = true;
+                            leftClick = true;
+                            attackCooldown = attackRate;
+                        }
+                    }
+
+                    if( hitInfo1.transform.gameObject.tag == "Shop")
+                    {
+                        targetedShop = true;
+                        myAgent.isStopped = false;
+                        leftClick = true;
+                        myAgent.SetDestination(hitInfo1.transform.position);
+                    }
+                }
+            }
+    }
+
+    public void GotRightClick()
+    {
+        Ray myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(myRay, out hitInfo1, 100, whatCanBeClickedOn))
+            {
+                Instantiate(particle, hitInfo1.point, particle.transform.rotation);
+                myAgent.isStopped = false;
+                myAgent.SetDestination(hitInfo1.point);
+            }
+    }
+
+    void movingAnimation()
+    {
         if (myAgent.remainingDistance <= myAgent.stoppingDistance || myAgent.isStopped == true)
         {
             isRunning = false;
@@ -112,15 +131,14 @@ public class PlayerMovement : MonoBehaviour
 
     // Reached enemy
     void OnTriggerEnter(Collider other) {
-        Debug.Log("Trigger enter " + leftClick);
         if(leftClick == true)
         {
-            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) {
+            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) 
+            {
                 Damage(other.gameObject.transform);
                 Attack();
             } 
             if (other.CompareTag( "Shop")){
-                Debug.Log("reach shop");
                 leftClick = false;
                 myAgent.isStopped = true;
             }
@@ -129,10 +147,10 @@ public class PlayerMovement : MonoBehaviour
 
     void  OnTriggerStay(Collider other)
     {
-        Debug.Log("Trigger stay " + leftClick);
         if(leftClick == true)
         {
-            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) {
+            if (other.CompareTag( "Enemy") && other.gameObject.transform.position == hitInfo1.transform.position) 
+            {
                 Damage(other.gameObject.transform);
                 Attack();
             } 
@@ -153,7 +171,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeDamage (float amount){
         player.health -= amount;
-        Debug.Log("Player health -" + amount + ", remain " + player.health);
 
 		if (player.health <= 0)
 		{
@@ -162,7 +179,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Attack(){
+    void Attack()
+    {
         myAgent.isStopped = true;
         targetedEnemy = false;
         leftClick = false;

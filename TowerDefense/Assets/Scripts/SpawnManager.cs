@@ -39,14 +39,14 @@ public class SpawnManager : MonoBehaviour
             currentTime += Time.deltaTime;
 
             countdownTime -= Time.deltaTime;
-            if(tmp == level){
+            if(tmp == level)
+            {
                 level++;
             }
 
             //when current time reaches time between rounds, start next round
             if (currentTime >= timeBetweenRounds)
             {
-                Debug.Log(level);
                 currentTime = 0;
                 tmp++;
                 spawnEnemies = 0;
@@ -62,7 +62,8 @@ public class SpawnManager : MonoBehaviour
             countdownText.text = "";
             countdownTime = 5.0f;
         }
-        else if (level > maxLevel){
+        else if (level > maxLevel)
+        {
             Time.timeScale = 0;
             congrats.gameObject.SetActive(true);
         }
@@ -76,8 +77,8 @@ public class SpawnManager : MonoBehaviour
         currentRoundText.text = "ROUND: " + level;
     }
 
-    IEnumerator SpawnEnemies(){
-        Debug.Log("start spawning");
+    IEnumerator SpawnEnemies()
+    {
         while(spawnEnemies < enemiesToSpawn[level-1])
         {
             Vector3 spawnLocation = spawnLocations[Random.Range(0,spawnLocations.Length)].transform.position;
